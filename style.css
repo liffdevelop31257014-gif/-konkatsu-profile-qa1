@@ -1,15 +1,109 @@
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.5);
-  justify-content: center;
-  align-items: center;
-  display: none; /* ★重要 */
+/* =========================
+  ベース
+========================= */
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f5f5f5;
 }
 
-.modal.show {
-  display: flex;
+.container {
+  padding: 16px;
+}
+
+/* =========================
+  フォーム
+========================= */
+
+input, textarea, select {
+  width: 100%;
+  margin: 8px 0;
+  padding: 10px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+textarea {
+  min-height: 80px;
+}
+
+/* =========================
+  ボタン
+========================= */
+
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  font-size: 15px;
+  border: none;
+  border-radius: 6px;
+  background: #06c755;
+  color: white;
+}
+
+button:active {
+  opacity: 0.8;
+}
+
+.buttons button {
+  margin-bottom: 8px;
+}
+
+/* =========================
+  ページ切替
+========================= */
+
+#page2 {
+  display: none;
+}
+
+/* =========================
+  同意エリア
+========================= */
+
+.consent {
+  background: white;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+/* =========================
+  ★共有モーダル（重要）
+  絶対に初期表示されない構造
+========================= */
+
+.modal {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.6);
+
+  /* ★ここが最重要：初期は完全非表示 */
+  display: none;
+
+  justify-content: center;
+  align-items: center;
+
+  z-index: 9999;
+}
+
+.modal-box {
+  background: white;
+  padding: 20px;
+  width: 85%;
+  border-radius: 10px;
+  text-align: center;
+}
+
+/* =========================
+  ユーティリティ
+========================= */
+
+.hidden {
+  display: none !important;
 }
