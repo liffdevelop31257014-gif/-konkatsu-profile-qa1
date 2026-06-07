@@ -50,6 +50,12 @@ button {
   opacity: 0.4;
 }
 
+/* ラジオ整形 */
+input[type="radio"] {
+  width: auto;
+  margin-right: 6px;
+}
+
 /* モーダル */
 .modal {
   position: fixed;
