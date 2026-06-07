@@ -16,11 +16,6 @@ window.onload = async () => {
 
   try {
 
-    document
-      .getElementById("shareModal")
-      .classList
-      .add("hidden");
-
     await liff.init({
       liffId: LIFF_ID
     });
@@ -80,18 +75,43 @@ async function sha256(text) {
 }
 
 /********************************
- * イベント
+ * イベント設定
  ********************************/
 function setupEvents() {
 
-  // Q4
+  setupQ4();
+  setupQ7();
 
-  const q4Detail =
+  document
+    .getElementById(
+      "submitBtn"
+    )
+    .addEventListener(
+      "click",
+      submitForm
+    );
+
+  document
+    .getElementById(
+      "shareBtn"
+    )
+    .addEventListener(
+      "click",
+      shareResult
+    );
+}
+
+/********************************
+ * Q4制御
+ ********************************/
+function setupQ4() {
+
+  const detail =
     document.getElementById(
       "q4Detail"
     );
 
-  q4Detail.style.display =
+  detail.style.display =
     "none";
 
   document
@@ -109,31 +129,32 @@ function setupEvents() {
             radio.value === "yes"
           ) {
 
-            q4Detail.style.display =
+            detail.style.display =
               "block";
 
-          } else if (
-            radio.checked &&
-            radio.value === "no"
-          ) {
+          } else {
 
-            q4Detail.style.display =
+            detail.style.display =
               "none";
 
-            q4Detail.value = "";
+            detail.value = "";
           }
         }
       );
     });
+}
 
-  // Q7
+/********************************
+ * Q7制御
+ ********************************/
+function setupQ7() {
 
-  const q7Detail =
+  const detail =
     document.getElementById(
       "q7Detail"
     );
 
-  q7Detail.style.display =
+  detail.style.display =
     "none";
 
   document
@@ -151,48 +172,23 @@ function setupEvents() {
             radio.value === "yes"
           ) {
 
-            q7Detail.style.display =
+            detail.style.display =
               "block";
 
-          } else if (
-            radio.checked &&
-            radio.value === "no"
-          ) {
+          } else {
 
-            q7Detail.style.display =
+            detail.style.display =
               "none";
 
-            q7Detail.value = "";
+            detail.value = "";
           }
         }
       );
     });
-
-  // 送信
-
-  document
-    .getElementById(
-      "submitBtn"
-    )
-    .addEventListener(
-      "click",
-      submitForm
-    );
-
-  // 共有
-
-  document
-    .getElementById(
-      "shareBtn"
-    )
-    .addEventListener(
-      "click",
-      shareResult
-    );
 }
 
 /********************************
- * データ取得
+ * 入力値取得
  ********************************/
 function collectData() {
 
@@ -213,7 +209,9 @@ function collectData() {
       )?.value || "",
 
     morningNewsDetail:
-      document.getElementById("q4Detail").value,
+      document.getElementById(
+        "q4Detail"
+      ).value,
 
     childhoodTv:
       document.getElementById("q5").value,
@@ -227,13 +225,17 @@ function collectData() {
       )?.value || "",
 
     mbtiType:
-      document.getElementById("q7Detail").value,
+      document.getElementById(
+        "q7Detail"
+      ).value,
 
     positive:
-      document.getElementById("q8").value,
+      document.getElementById("q8")
+        .value || "3",
 
     empathy:
-      document.getElementById("q9").value,
+      document.getElementById("q9")
+        .value || "3",
 
     club:
       document.getElementById("q10").value,
@@ -258,11 +260,18 @@ function collectData() {
 }
 
 /********************************
- * GAS送信
+ * 送信
  ********************************/
 async function submitForm() {
 
+  const submitBtn =
+    document.getElementById(
+      "submitBtn"
+    );
+
   try {
+
+    submitBtn.disabled = true;
 
     const payload = {
 
@@ -293,20 +302,18 @@ async function submitForm() {
     const result =
       await response.json();
 
-    if (
-      !result.success
-    ) {
+    if (!result.success) {
 
       alert(
         result.message ||
-        "送信失敗"
+        "保存に失敗しました"
       );
 
       return;
     }
 
     alert(
-      "回答を保存しました"
+      "回答ありがとうございました"
     );
 
     document
@@ -314,15 +321,19 @@ async function submitForm() {
         "shareModal"
       )
       .classList
-      .remove("hidden");
+      .add("show");
 
   } catch (error) {
 
     console.error(error);
 
     alert(
-      "送信エラー"
+      "通信エラーが発生しました"
     );
+
+  } finally {
+
+    submitBtn.disabled = false;
   }
 }
 
@@ -337,8 +348,8 @@ async function shareResult() {
         "shareName"
       )
       .value
-      .trim()
-      || "匿名";
+      .trim() ||
+    "匿名";
 
   const data =
     collectData();
@@ -418,10 +429,10 @@ ${data.mbtiStatus === "yes"
 ? data.mbtiType
 : "なし"}
 
-Q8
+Q8 ポジティブ度
 ネガティブ ${positiveBar} ポジティブ
 
-Q9
+Q9 察する度
 察さない ${empathyBar} 察する
 
 Q10 部活動
@@ -433,7 +444,7 @@ ${data.partTimeJob}
 Q12 休日（人と）
 ${data.holidayWithFriends}
 
-Q13 休日（1人）
+Q13 休日（一人）
 ${data.holidayAlone}
 
 Q14 LINE頻度
