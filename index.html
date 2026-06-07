@@ -13,21 +13,6 @@
 
 <div class="container">
 
-  <!-- 同意（Page1のみ） -->
-  <div class="consent-box">
-    <p>
-      このフォームでは回答内容を保存します。<br>
-      LINE情報はハッシュ化されます。<br>
-      プロフィール情報は取得しません。
-    </p>
-
-    <label>
-      <input type="checkbox" id="consent">
-      同意します
-    </label>
-  </div>
-
-  <!-- Page1 -->
   <div id="page1">
 
     <label>Q1 起床時間</label>
@@ -51,27 +36,25 @@
     <label>Q7 MBTI経験</label>
 
     <label>
-      <input type="radio" name="q7" value="yes" required>
+      <input type="radio" name="q7" value="yes">
       あり
     </label>
 
     <label>
-      <input type="radio" name="q7" value="no" required>
+      <input type="radio" name="q7" value="no">
       なし
     </label>
 
-    <!-- ★自由記述（ありの場合のみ） -->
+    <!-- ★自由記述（ありのときだけ表示） -->
     <input
       id="q7Detail"
-      placeholder="MBTIタイプ（例：INTJなど）"
+      placeholder="MBTIタイプ（例：INTJ）"
       style="display:none; margin-top:10px;"
-    >
+    />
 
     <button id="nextBtn">次へ</button>
-
   </div>
 
-  <!-- Page2 -->
   <div id="page2" class="hidden">
 
     <label>Q8 ポジネガ</label>
@@ -117,7 +100,9 @@
   <div class="modal-content">
 
     <h3>共有</h3>
+
     <input id="shareName" placeholder="共有名（任意）">
+
     <button id="shareBtn">共有する</button>
 
   </div>
