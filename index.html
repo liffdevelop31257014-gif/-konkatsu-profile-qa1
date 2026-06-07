@@ -1,120 +1,12 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>婚活自己開示QA Part1</title>
-
-  <link rel="stylesheet" href="style.css">
-
-  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-</head>
-
-<body>
-
-<div id="app">
-
-  <div id="consent">
-    <p>このアプリは回答内容をGoogleスプレッドシートに保存します。</p>
-    <p>LINE情報はハッシュ化され、プロフィール情報は取得されません。</p>
-    <button id="startBtn">開始</button>
-  </div>
-
-  <form id="form" class="hidden">
-
-    <!-- Page1 -->
-    <div class="page" id="page1">
-
-      <label>Q1 起床時間</label>
-      <input type="time" id="q1">
-
-      <label>Q2 就寝時間</label>
-      <input type="time" id="q2">
-
-      <label>Q3 仕事後の過ごし方</label>
-      <textarea id="q3"></textarea>
-
-      <label>Q4 朝のニュース・番組</label>
-      <textarea id="q4"></textarea>
-
-      <label>Q5 子どもの頃好きだったテレビ番組（必須）</label>
-      <input type="text" id="q5" required>
-
-      <label>Q6 あだ名（必須）</label>
-      <input type="text" id="q6" required>
-
-      <label>Q7 MBTI経験</label>
-      <select id="q7">
-        <option value="">選択</option>
-        <option value="yes">やったことがある</option>
-        <option value="no">やったことがない</option>
-      </select>
-
-      <input type="text" id="q7Detail" placeholder="MBTI結果" class="hidden">
-
-      <button type="button" id="nextBtn">次へ</button>
-    </div>
-
-    <!-- Page2 -->
-    <div class="page hidden" id="page2">
-
-      <label>Q8 ポジティブ ↔ ネガティブ</label>
-      <input type="range" id="q8" min="1" max="5">
-
-      <label>Q9 察する ↔ 察さない</label>
-      <input type="range" id="q9" min="1" max="5">
-
-      <label>Q10 部活動</label>
-      <input type="text" id="q10">
-
-      <label>Q11 バイト経験</label>
-      <input type="text" id="q11">
-
-      <label>Q12 休日（他人と）</label>
-      <textarea id="q12"></textarea>
-
-      <label>Q13 休日（1人）</label>
-      <textarea id="q13"></textarea>
-
-      <label>Q14 LINE頻度</label>
-      <select id="q14">
-        <option value="">選択</option>
-        <option value="6h">6時間以内</option>
-        <option value="12h">12時間以内</option>
-        <option value="24h">24時間以内</option>
-        <option value="3d">3日以内</option>
-        <option value="consult">相談のみ</option>
-        <option value="nochat">雑談しない</option>
-        <option value="reject">雑談・受信も嫌</option>
-      </select>
-
-      <label>Q15 デートで行きたい場所</label>
-      <input type="text" id="q15">
-
-      <button type="button" id="backBtn">戻る</button>
-      <button type="button" id="saveDraftBtn">下書き保存</button>
-      <button type="button" id="clearBtn">フォームクリア</button>
-      <button type="button" id="submitBtn">回答送信</button>
-    </div>
-
-  </form>
-
-</div>
-
-<!-- 共有モーダル（初期非表示） -->
-<div id="shareModal" class="hidden">
+<!-- 共有モーダル -->
+<div id="shareModal" class="modal hidden">
   <div class="modal-content">
 
-    <p>共有名（任意）</p>
-    <input type="text" id="shareName" placeholder="匿名">
+    <h3>共有</h3>
+
+    <input type="text" id="shareName" placeholder="共有名（空欄＝匿名）" />
 
     <button id="shareBtn">共有</button>
-    <button id="closeShareBtn">閉じる</button>
 
   </div>
 </div>
-
-<script src="app.js"></script>
-
-</body>
-</html>
