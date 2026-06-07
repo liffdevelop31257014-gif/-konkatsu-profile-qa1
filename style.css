@@ -2,6 +2,7 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Noto Sans JP", sans-serif;
   background: #f5f6f8;
+  color: #333;
 }
 
 .container {
@@ -13,22 +14,43 @@ body {
 label {
   display: block;
   margin-top: 14px;
-  font-weight: bold;
+  font-weight: 600;
   font-size: 14px;
+  line-height: 1.5;
 }
 
-input, textarea, select {
+input, textarea {
   width: 100%;
   margin-top: 6px;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 8px;
+  font-size: 14px;
+  box-sizing: border-box;
 }
 
 textarea {
   min-height: 80px;
+  resize: vertical;
 }
 
+/* ラジオ */
+input[type="radio"] {
+  width: auto;
+  margin-right: 6px;
+}
+
+/* スライダーラベル */
+.slider-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+  margin-bottom: -4px;
+}
+
+/* ボタン */
 button {
   width: 100%;
   margin-top: 20px;
@@ -38,22 +60,11 @@ button {
   background: #06c755;
   color: white;
   font-size: 16px;
+  cursor: pointer;
 }
 
-/* Q7自由記述 */
-#q7Detail {
-  margin-top: 6px;
-  margin-left: 22px;
-}
-
-#q7Detail:disabled {
-  opacity: 0.4;
-}
-
-/* ラジオ整形 */
-input[type="radio"] {
-  width: auto;
-  margin-right: 6px;
+button:hover {
+  opacity: 0.9;
 }
 
 /* モーダル */
