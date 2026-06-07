@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>婚活自己開示QA</title>
+  <title>婚活自己開示QA Part1</title>
 
   <link rel="stylesheet" href="style.css" />
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
@@ -13,8 +13,10 @@
 
 <div class="container">
 
-  <!-- 同意 -->
-  <div class="consent">
+  <!-- =========================
+    同意
+  ========================= -->
+  <div class="consent-box">
     <p>
       このフォームでは回答内容を保存します。<br>
       LINE情報はハッシュ化されます。
@@ -22,78 +24,133 @@
 
     <label>
       <input type="checkbox" id="consent">
-      同意する
+      内容に同意する
     </label>
   </div>
 
-  <!-- Page1 -->
+  <!-- =========================
+    Page1
+  ========================= -->
   <section id="page1">
 
-    <input id="q1" type="time" placeholder="起床時間">
-    <input id="q2" type="time" placeholder="就寝時間">
-
-    <textarea id="q3" placeholder="仕事後の過ごし方"></textarea>
-    <textarea id="q4" placeholder="朝の番組"></textarea>
-
-    <input id="q5" type="text" placeholder="子どもの頃好きな番組">
-    <input id="q6" type="text" placeholder="あだ名">
-
-    <div>
-      <label><input type="radio" name="q7" value="yes">ある</label>
-      <label><input type="radio" name="q7" value="no">ない</label>
+    <div class="question">
+      <div class="q-title">Q1 朝起きる時間は何時ですか？</div>
+      <input id="q1" type="time">
     </div>
 
-    <input id="q7Detail" type="text" placeholder="MBTI詳細" style="display:none;">
+    <div class="question">
+      <div class="q-title">Q2 夜寝る時間は何時ですか？</div>
+      <input id="q2" type="time">
+    </div>
+
+    <div class="question">
+      <div class="q-title">Q3 仕事終わりの過ごし方</div>
+      <textarea id="q3"></textarea>
+    </div>
+
+    <div class="question">
+      <div class="q-title">Q4 朝のニュース・番組</div>
+      <textarea id="q4"></textarea>
+    </div>
+
+    <div class="question">
+      <div class="q-title">Q5 子どもの頃好きだったテレビ番組</div>
+      <input id="q5" type="text">
+    </div>
+
+    <div class="question">
+      <div class="q-title">Q6 あだ名</div>
+      <input id="q6" type="text">
+    </div>
+
+    <div class="question">
+      <div class="q-title">Q7 MBTI診断はしたことがありますか？</div>
+
+      <label><input type="radio" name="q7" value="yes">ある</label>
+      <label><input type="radio" name="q7" value="no">ない</label>
+
+      <input id="q7Detail" type="text" placeholder="MBTIタイプ（ある場合）" style="display:none;">
+    </div>
 
     <button id="nextBtn">次へ</button>
+
   </section>
 
-  <!-- Page2 -->
+  <!-- =========================
+    Page2
+  ========================= -->
   <section id="page2" style="display:none;">
 
-    <input id="q8" type="range" min="1" max="5">
-    <input id="q9" type="range" min="1" max="5">
+    <div class="question">
+      <div class="q-title">Q8 ポジティブ ↔ ネガティブ</div>
+      <input id="q8" type="range" min="1" max="5">
+    </div>
 
-    <input id="q10" placeholder="部活">
-    <input id="q11" placeholder="バイト">
+    <div class="question">
+      <div class="q-title">Q9 察する ↔ 察さない</div>
+      <input id="q9" type="range" min="1" max="5">
+    </div>
 
-    <textarea id="q12"></textarea>
-    <textarea id="q13"></textarea>
+    <div class="question">
+      <div class="q-title">Q10 部活動</div>
+      <input id="q10" type="text">
+    </div>
 
-    <select id="q14">
-      <option>6時間以内</option>
-      <option>12時間以内</option>
-      <option>24時間以内</option>
-      <option>3日以内</option>
-      <option>相談のみ</option>
-      <option>雑談しない</option>
-      <option>雑談＋受信NG</option>
-    </select>
+    <div class="question">
+      <div class="q-title">Q11 バイト経験</div>
+      <input id="q11" type="text">
+    </div>
 
-    <input id="q15" placeholder="デート場所">
+    <div class="question">
+      <div class="q-title">Q12 休日の過ごし方（他人と）</div>
+      <textarea id="q12"></textarea>
+    </div>
+
+    <div class="question">
+      <div class="q-title">Q13 休日の過ごし方（1人）</div>
+      <textarea id="q13"></textarea>
+    </div>
+
+    <div class="question">
+      <div class="q-title">Q14 LINE頻度</div>
+
+      <select id="q14">
+        <option value="6h">6時間以内</option>
+        <option value="12h">12時間以内</option>
+        <option value="24h">24時間以内</option>
+        <option value="3d">3日以内</option>
+        <option value="consult">相談のみ</option>
+        <option value="nochat">雑談しない</option>
+        <option value="strict">雑談＋受信NG</option>
+      </select>
+    </div>
+
+    <div class="question">
+      <div class="q-title">Q15 デートで行きたい場所</div>
+      <input id="q15" type="text">
+    </div>
 
     <div class="buttons">
       <button id="backBtn">戻る</button>
-      <button id="saveBtn">下書き</button>
+      <button id="saveBtn">下書き保存</button>
       <button id="clearBtn">クリア</button>
-      <button id="submitBtn">送信</button>
+      <button id="submitBtn">回答送信</button>
     </div>
 
   </section>
 
 </div>
 
-<!-- ===================== -->
-<!-- 共有モーダル（重要） -->
-<!-- 初期状態：絶対非表示 -->
-<!-- ===================== -->
-<div id="shareModal" style="display:none;" class="modal">
+<!-- =========================
+  共有モーダル（初期完全非表示）
+========================= -->
+<div id="shareModal" class="modal" style="display:none;">
 
   <div class="modal-box">
 
-    <h3>共有</h3>
+    <div class="q-title">共有</div>
 
-    <input id="shareName" placeholder="共有名（空欄=匿名）">
+    <input id="shareName" type="text" placeholder="共有名（空欄＝匿名）">
 
     <button id="shareBtn">共有</button>
 
@@ -102,5 +159,6 @@
 </div>
 
 <script src="app.js"></script>
+
 </body>
 </html>
