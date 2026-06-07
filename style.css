@@ -1,6 +1,6 @@
 body {
-  margin: 0;
   font-family: sans-serif;
+  margin: 0;
   background: #f5f5f5;
 }
 
@@ -10,15 +10,10 @@ body {
   padding: 16px;
 }
 
-label {
-  display: block;
-  margin-top: 12px;
-}
-
 input, textarea, select {
   width: 100%;
+  margin: 6px 0;
   padding: 8px;
-  margin-top: 4px;
 }
 
 button {
@@ -36,17 +31,23 @@ button {
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.5);
-
-  display: none; /* ←完全非表示 */
+  display: none;
   justify-content: center;
   align-items: center;
-
   z-index: 9999;
 }
 
 .modal-content {
   background: white;
   padding: 20px;
-  border-radius: 10px;
   width: 90%;
+  border-radius: 10px;
+}
+
+/* ★追加：保存ステータス */
+.save-status {
+  font-size: 13px;
+  color: #06c755;
+  margin: 10px 0;
+  min-height: 18px;
 }
