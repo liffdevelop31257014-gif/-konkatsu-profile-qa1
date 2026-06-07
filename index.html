@@ -13,96 +13,95 @@
 
 <div class="container">
 
-  <div id="page1">
+  <!-- Q1 -->
+  <label>Q1 起床時間</label>
+  <input type="time" id="q1">
 
-    <label>Q1 起床時間</label>
-    <input type="time" id="q1">
+  <!-- Q2 -->
+  <label>Q2 就寝時間</label>
+  <input type="time" id="q2">
 
-    <label>Q2 就寝時間</label>
-    <input type="time" id="q2">
+  <!-- Q3 -->
+  <label>Q3 仕事後の過ごし方</label>
+  <textarea id="q3"></textarea>
 
-    <label>Q3 仕事後の過ごし方</label>
-    <textarea id="q3"></textarea>
+  <!-- Q4 -->
+  <label>Q4 朝のニュース</label>
+  <textarea id="q4"></textarea>
 
-    <label>Q4 朝のニュース</label>
-    <textarea id="q4"></textarea>
+  <!-- Q5 -->
+  <label>Q5 子どもの頃好きだった番組</label>
+  <input type="text" id="q5">
 
-    <label>Q5 子どもの頃好きだった番組</label>
-    <input type="text" id="q5">
+  <!-- Q6 -->
+  <label>Q6 あだ名</label>
+  <input type="text" id="q6">
 
-    <label>Q6 あだ名</label>
-    <input type="text" id="q6">
+  <!-- Q7 -->
+  <label>Q7 MBTI経験</label>
 
-    <label>Q7 MBTI経験</label>
+  <label>
+    <input type="radio" name="q7" value="yes">
+    あり
+  </label>
 
-    <label>
-      <input type="radio" name="q7" value="yes">
-      あり
-    </label>
+  <!-- 自由記述 -->
+  <input id="q7Detail" placeholder="MBTIタイプ（例：INTJ）">
 
-    <label>
-      <input type="radio" name="q7" value="no">
-      なし
-    </label>
+  <label>
+    <input type="radio" name="q7" value="no">
+    なし
+  </label>
 
-    <!-- ★自由記述（ありのときだけ表示） -->
-    <input
-      id="q7Detail"
-      placeholder="MBTIタイプ（例：INTJ）"
-      style="display:none; margin-top:10px;"
-    />
+  <!-- Q8 -->
+  <label>Q8 ポジネガ</label>
+  <input type="range" id="q8" min="1" max="5">
 
-    <button id="nextBtn">次へ</button>
-  </div>
+  <!-- Q9 -->
+  <label>Q9 察する力</label>
+  <input type="range" id="q9" min="1" max="5">
 
-  <div id="page2" class="hidden">
+  <!-- Q10 -->
+  <label>Q10 部活</label>
+  <input id="q10">
 
-    <label>Q8 ポジネガ</label>
-    <input type="range" id="q8" min="1" max="5">
+  <!-- Q11 -->
+  <label>Q11 バイト</label>
+  <input id="q11">
 
-    <label>Q9 察する力</label>
-    <input type="range" id="q9" min="1" max="5">
+  <!-- Q12 -->
+  <label>Q12 休日（人と）</label>
+  <textarea id="q12"></textarea>
 
-    <label>Q10 部活</label>
-    <input id="q10">
+  <!-- Q13 -->
+  <label>Q13 休日（1人）</label>
+  <textarea id="q13"></textarea>
 
-    <label>Q11 バイト</label>
-    <input id="q11">
+  <!-- Q14 -->
+  <label>Q14 LINE頻度</label>
+  <select id="q14">
+    <option value="6h">6時間以内</option>
+    <option value="12h">12時間以内</option>
+    <option value="24h">24時間以内</option>
+    <option value="3d">3日以内</option>
+    <option value="consult">相談のみ</option>
+    <option value="nochat">雑談しない</option>
+  </select>
 
-    <label>Q12 休日（人と）</label>
-    <textarea id="q12"></textarea>
+  <!-- Q15 -->
+  <label>Q15 デート希望</label>
+  <input id="q15">
 
-    <label>Q13 休日（1人）</label>
-    <textarea id="q13"></textarea>
-
-    <label>Q14 LINE頻度</label>
-    <select id="q14">
-      <option value="6h">6時間以内</option>
-      <option value="12h">12時間以内</option>
-      <option value="24h">24時間以内</option>
-      <option value="3d">3日以内</option>
-      <option value="consult">相談のみ</option>
-      <option value="nochat">雑談しない</option>
-    </select>
-
-    <label>Q15 デート希望</label>
-    <input id="q15">
-
-    <button id="backBtn">戻る</button>
-    <button id="submitBtn">送信</button>
-
-  </div>
+  <button id="submitBtn">送信</button>
 
 </div>
 
-<!-- 共有モーダル -->
+<!-- モーダル -->
 <div id="shareModal" class="modal">
   <div class="modal-content">
 
     <h3>共有</h3>
-
     <input id="shareName" placeholder="共有名（任意）">
-
     <button id="shareBtn">共有する</button>
 
   </div>
