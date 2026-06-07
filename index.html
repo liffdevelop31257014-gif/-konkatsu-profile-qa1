@@ -14,74 +14,83 @@
 <div class="container">
 
   <!-- Q1 -->
-  <label>Q1 起床時間</label>
+  <label>Q1 朝起きる時間は何時ですか？ </label>
   <input type="time" id="q1">
 
   <!-- Q2 -->
-  <label>Q2 就寝時間</label>
+  <label>Q2 夜寝る時間は何時ですか？ </label>
   <input type="time" id="q2">
 
   <!-- Q3 -->
-  <label>Q3 仕事後の過ごし方</label>
+  <label>Q3 仕事終わり、どんな過ごし方をしていますか？将来の理想ではなく今どんな過ごし方を教えてください。 </label>
   <textarea id="q3"></textarea>
 
   <!-- Q4 -->
-  <label>Q4 朝のニュース</label>
-  <textarea id="q4"></textarea>
+  <label>Q4 平日の朝いつもつけているニュース/ワイドショー番組はありますか？あればどのチャンネル、番組名を教えてください。 </label>
+    <label><input type="radio" name="q4" value="yes">あり</label>
+  <input id="q4Detail" placeholder="番組名">
+  <label><input type="radio" name="q4" value="no">なし</label>
 
   <!-- Q5 -->
-  <label>Q5 子どもの頃好きだった番組</label>
+  <label>Q5 子どもの頃好きだったテレビ番組は何ですか？ </label>
   <input type="text" id="q5">
 
   <!-- Q6 -->
-  <label>Q6 あだ名</label>
+  <label>Q6 これまでに呼ばれたことのあるあだ名は何ですか？ </label>
   <input type="text" id="q6">
 
   <!-- Q7 -->
-  <label>Q7 MBTI経験</label>
+  <label>Q7 MBTI診断したことはありますか？あればどのタイプだったか教えてください 。</label>
 
   <label><input type="radio" name="q7" value="yes">あり</label>
-
-  <input id="q7Detail" placeholder="MBTIタイプ（例：INTJ）">
-
+  <input id="q7Detail" placeholder="MBTIタイプ">
   <label><input type="radio" name="q7" value="no">なし</label>
 
   <!-- Q8 -->
-  <label>Q8 ポジネガ</label>
-  <input type="range" id="q8" min="1" max="5">
+  <label>Q8 ポジティブですか？ネガティブですか？ </label>
+  <div class="slider-labels">
+    <span>ネガティブ</span>
+    <span>ポジティブ</span>
+  </div>
+  <input type="range" id="q8" min="1" max="5" step="1">
 
   <!-- Q9 -->
-  <label>Q9 察する力</label>
-  <input type="range" id="q9" min="1" max="5">
+  <label>Q9 周囲の感情などを察する方ですか？ </label>
+  <div class="slider-labels">
+    <span>察さない</span>
+    <span>察する</span>
+  </div>
+  <input type="range" id="q9" min="1" max="5" step="1">
 
   <!-- Q10 -->
-  <label>Q10 部活</label>
+  <label>Q10 部活動、サークル活動は何をしていましたか？ </label>
   <input id="q10">
 
   <!-- Q11 -->
-  <label>Q11 バイト</label>
+  <label>Q11 どんなバイトをしたことがありますか？ </label>
   <input id="q11">
 
   <!-- Q12 -->
-  <label>Q12 休日（人と）</label>
+  <label>Q12 休みの日に友人や家族と会うことはありますか？ある場合はどんなことをすることが多いですか？ </label>
   <textarea id="q12"></textarea>
 
   <!-- Q13 -->
-  <label>Q13 休日（1人）</label>
+  <label>Q13 1人で過ごす時の休みの日の過ごし方を教えてください 。</label>
   <textarea id="q13"></textarea>
 
   <!-- Q14 -->
-  <label>Q14 LINE頻度</label>
+  <label>Q14 LINEの頻度はどれくらいが理想ですか？ </label>
 
-  <label><input type="radio" name="q14" value="6h">6時間以内</label>
-  <label><input type="radio" name="q14" value="12h">12時間以内</label>
-  <label><input type="radio" name="q14" value="24h">24時間以内</label>
-  <label><input type="radio" name="q14" value="3d">3日以内</label>
-  <label><input type="radio" name="q14" value="consult">相談のみ</label>
-  <label><input type="radio" name="q14" value="nochat">雑談しない</label>
+  <label><input type="radio" name="q14" value="6h"> 返信まで6時間以内（朝LINEしたら昼までには返してほしい） </label>
+  <label><input type="radio" name="q14" value="12h"> 返信まで12時間以内（朝LINEしたら夜までには返してほしい） </label>
+  <label><input type="radio" name="q14" value="24h"> 返信まで24時間以内（朝LINEしたら翌朝までには返してほしい） </label>
+  <label><input type="radio" name="q14" value="3d">返信まで3日以内</label>
+  <label><input type="radio" name="q14" value="consult"> 相談事項には返信してほしいが雑談LINEには返信はあってもなくてもよい </label>
+  <label><input type="radio" name="q14" value="nochat1"> 雑談LINEは自分は送らないが相手から送られる分には気にしない </label>
+ <label><input type="radio" name="q14" value="nochat2"> 雑談LINEは送りたくないし送られるのも好きじゃない </label>
 
   <!-- Q15 -->
-  <label>Q15 デート希望</label>
+  <label>Q15 今後デートで行きたいところはありますか？ </label>
   <input id="q15">
 
   <button id="submitBtn">送信</button>
