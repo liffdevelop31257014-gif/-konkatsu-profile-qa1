@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>婚活自己開示QA Part1</title>
+  <title>婚活自己開示QA</title>
 
   <link rel="stylesheet" href="style.css" />
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
@@ -14,8 +14,12 @@
 <div class="container">
 
   <!-- 同意 -->
-  <div class="consent-box">
-    <p>回答内容は保存されます。LINE情報はハッシュ化されます。</p>
+  <div class="consent">
+    <p>
+      このフォームでは回答内容を保存します。<br>
+      LINE情報はハッシュ化されます。
+    </p>
+
     <label>
       <input type="checkbox" id="consent">
       同意する
@@ -23,33 +27,36 @@
   </div>
 
   <!-- Page1 -->
-  <div id="page1">
+  <section id="page1">
 
-    <input type="time" id="q1" placeholder="Q1">
-    <input type="time" id="q2" placeholder="Q2">
-    <textarea id="q3"></textarea>
-    <textarea id="q4"></textarea>
-    <input type="text" id="q5">
-    <input type="text" id="q6">
+    <input id="q1" type="time" placeholder="起床時間">
+    <input id="q2" type="time" placeholder="就寝時間">
+
+    <textarea id="q3" placeholder="仕事後の過ごし方"></textarea>
+    <textarea id="q4" placeholder="朝の番組"></textarea>
+
+    <input id="q5" type="text" placeholder="子どもの頃好きな番組">
+    <input id="q6" type="text" placeholder="あだ名">
 
     <div>
       <label><input type="radio" name="q7" value="yes">ある</label>
       <label><input type="radio" name="q7" value="no">ない</label>
     </div>
 
-    <input type="text" id="q7Detail" style="display:none;">
+    <input id="q7Detail" type="text" placeholder="MBTI詳細" style="display:none;">
 
     <button id="nextBtn">次へ</button>
-  </div>
+  </section>
 
   <!-- Page2 -->
-  <div id="page2" class="hidden">
+  <section id="page2" style="display:none;">
 
-    <input type="range" id="q8" min="1" max="5">
-    <input type="range" id="q9" min="1" max="5">
+    <input id="q8" type="range" min="1" max="5">
+    <input id="q9" type="range" min="1" max="5">
 
-    <input id="q10">
-    <input id="q11">
+    <input id="q10" placeholder="部活">
+    <input id="q11" placeholder="バイト">
+
     <textarea id="q12"></textarea>
     <textarea id="q13"></textarea>
 
@@ -63,18 +70,25 @@
       <option>雑談＋受信NG</option>
     </select>
 
-    <input id="q15">
+    <input id="q15" placeholder="デート場所">
 
-    <button id="backBtn">戻る</button>
-    <button id="saveDraftBtn">下書き</button>
-    <button id="clearBtn">クリア</button>
-    <button id="submitBtn">送信</button>
-  </div>
+    <div class="buttons">
+      <button id="backBtn">戻る</button>
+      <button id="saveBtn">下書き</button>
+      <button id="clearBtn">クリア</button>
+      <button id="submitBtn">送信</button>
+    </div>
+
+  </section>
 
 </div>
 
-<!-- ★共有モーダル（初期非表示保証） -->
-<div id="shareModal" class="modal">
+<!-- ===================== -->
+<!-- 共有モーダル（重要） -->
+<!-- 初期状態：絶対非表示 -->
+<!-- ===================== -->
+<div id="shareModal" style="display:none;" class="modal">
+
   <div class="modal-box">
 
     <h3>共有</h3>
@@ -84,6 +98,7 @@
     <button id="shareBtn">共有</button>
 
   </div>
+
 </div>
 
 <script src="app.js"></script>
