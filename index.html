@@ -1,161 +1,117 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>婚活自己開示QA Part1</title>
 
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
+
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 </head>
 
 <body>
 
-<div class="container">
+<div id="app">
 
-  <!-- =========================
-    同意
-  ========================= -->
-  <div class="consent-box">
-    <p>
-      このフォームでは回答内容を保存します。<br>
-      LINE情報はハッシュ化されます。
-    </p>
-
-    <label>
-      <input type="checkbox" id="consent">
-      内容に同意する
-    </label>
+  <div id="consent">
+    <p>このアプリは回答内容をGoogleスプレッドシートに保存します。</p>
+    <p>LINE情報はハッシュ化され、プロフィール情報は取得されません。</p>
+    <button id="startBtn">開始</button>
   </div>
 
-  <!-- =========================
-    Page1
-  ========================= -->
-  <section id="page1">
+  <form id="form" class="hidden">
 
-    <div class="question">
-      <div class="q-title">Q1 朝起きる時間は何時ですか？</div>
-      <input id="q1" type="time">
-    </div>
+    <!-- Page1 -->
+    <div class="page" id="page1">
 
-    <div class="question">
-      <div class="q-title">Q2 夜寝る時間は何時ですか？</div>
-      <input id="q2" type="time">
-    </div>
+      <label>Q1 起床時間</label>
+      <input type="time" id="q1">
 
-    <div class="question">
-      <div class="q-title">Q3 仕事終わりの過ごし方</div>
+      <label>Q2 就寝時間</label>
+      <input type="time" id="q2">
+
+      <label>Q3 仕事後の過ごし方</label>
       <textarea id="q3"></textarea>
-    </div>
 
-    <div class="question">
-      <div class="q-title">Q4 朝のニュース・番組</div>
+      <label>Q4 朝のニュース・番組</label>
       <textarea id="q4"></textarea>
+
+      <label>Q5 子どもの頃好きだったテレビ番組（必須）</label>
+      <input type="text" id="q5" required>
+
+      <label>Q6 あだ名（必須）</label>
+      <input type="text" id="q6" required>
+
+      <label>Q7 MBTI経験</label>
+      <select id="q7">
+        <option value="">選択</option>
+        <option value="yes">やったことがある</option>
+        <option value="no">やったことがない</option>
+      </select>
+
+      <input type="text" id="q7Detail" placeholder="MBTI結果" class="hidden">
+
+      <button type="button" id="nextBtn">次へ</button>
     </div>
 
-    <div class="question">
-      <div class="q-title">Q5 子どもの頃好きだったテレビ番組</div>
-      <input id="q5" type="text">
-    </div>
+    <!-- Page2 -->
+    <div class="page hidden" id="page2">
 
-    <div class="question">
-      <div class="q-title">Q6 あだ名</div>
-      <input id="q6" type="text">
-    </div>
+      <label>Q8 ポジティブ ↔ ネガティブ</label>
+      <input type="range" id="q8" min="1" max="5">
 
-    <div class="question">
-      <div class="q-title">Q7 MBTI診断はしたことがありますか？</div>
+      <label>Q9 察する ↔ 察さない</label>
+      <input type="range" id="q9" min="1" max="5">
 
-      <label><input type="radio" name="q7" value="yes">ある</label>
-      <label><input type="radio" name="q7" value="no">ない</label>
+      <label>Q10 部活動</label>
+      <input type="text" id="q10">
 
-      <input id="q7Detail" type="text" placeholder="MBTIタイプ（ある場合）" style="display:none;">
-    </div>
+      <label>Q11 バイト経験</label>
+      <input type="text" id="q11">
 
-    <button id="nextBtn">次へ</button>
-
-  </section>
-
-  <!-- =========================
-    Page2
-  ========================= -->
-  <section id="page2" style="display:none;">
-
-    <div class="question">
-      <div class="q-title">Q8 ポジティブ ↔ ネガティブ</div>
-      <input id="q8" type="range" min="1" max="5">
-    </div>
-
-    <div class="question">
-      <div class="q-title">Q9 察する ↔ 察さない</div>
-      <input id="q9" type="range" min="1" max="5">
-    </div>
-
-    <div class="question">
-      <div class="q-title">Q10 部活動</div>
-      <input id="q10" type="text">
-    </div>
-
-    <div class="question">
-      <div class="q-title">Q11 バイト経験</div>
-      <input id="q11" type="text">
-    </div>
-
-    <div class="question">
-      <div class="q-title">Q12 休日の過ごし方（他人と）</div>
+      <label>Q12 休日（他人と）</label>
       <textarea id="q12"></textarea>
-    </div>
 
-    <div class="question">
-      <div class="q-title">Q13 休日の過ごし方（1人）</div>
+      <label>Q13 休日（1人）</label>
       <textarea id="q13"></textarea>
-    </div>
 
-    <div class="question">
-      <div class="q-title">Q14 LINE頻度</div>
-
+      <label>Q14 LINE頻度</label>
       <select id="q14">
+        <option value="">選択</option>
         <option value="6h">6時間以内</option>
         <option value="12h">12時間以内</option>
         <option value="24h">24時間以内</option>
         <option value="3d">3日以内</option>
         <option value="consult">相談のみ</option>
         <option value="nochat">雑談しない</option>
-        <option value="strict">雑談＋受信NG</option>
+        <option value="reject">雑談・受信も嫌</option>
       </select>
+
+      <label>Q15 デートで行きたい場所</label>
+      <input type="text" id="q15">
+
+      <button type="button" id="backBtn">戻る</button>
+      <button type="button" id="saveDraftBtn">下書き保存</button>
+      <button type="button" id="clearBtn">フォームクリア</button>
+      <button type="button" id="submitBtn">回答送信</button>
     </div>
 
-    <div class="question">
-      <div class="q-title">Q15 デートで行きたい場所</div>
-      <input id="q15" type="text">
-    </div>
-
-    <div class="buttons">
-      <button id="backBtn">戻る</button>
-      <button id="saveBtn">下書き保存</button>
-      <button id="clearBtn">クリア</button>
-      <button id="submitBtn">回答送信</button>
-    </div>
-
-  </section>
+  </form>
 
 </div>
 
-<!-- =========================
-  共有モーダル（初期完全非表示）
-========================= -->
-<div id="shareModal" class="modal" style="display:none;">
+<!-- 共有モーダル（初期非表示） -->
+<div id="shareModal" class="hidden">
+  <div class="modal-content">
 
-  <div class="modal-box">
-
-    <div class="q-title">共有</div>
-
-    <input id="shareName" type="text" placeholder="共有名（空欄＝匿名）">
+    <p>共有名（任意）</p>
+    <input type="text" id="shareName" placeholder="匿名">
 
     <button id="shareBtn">共有</button>
+    <button id="closeShareBtn">閉じる</button>
 
   </div>
-
 </div>
 
 <script src="app.js"></script>
