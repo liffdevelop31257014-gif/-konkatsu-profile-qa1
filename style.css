@@ -31,16 +31,23 @@ textarea {
 
 button {
   width: 100%;
-  margin-top: 12px;
-  padding: 12px;
+  margin-top: 20px;
+  padding: 14px;
   border: none;
   border-radius: 10px;
   background: #06c755;
   color: white;
+  font-size: 16px;
 }
 
-.hidden {
-  display: none;
+/* Q7自由記述 */
+#q7Detail {
+  margin-top: 6px;
+  margin-left: 22px;
+}
+
+#q7Detail:disabled {
+  opacity: 0.4;
 }
 
 /* モーダル */
