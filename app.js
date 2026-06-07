@@ -17,9 +17,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   setupEvents();
 });
 
-/* =====================
-   SHA256
-===================== */
+/* SHA256 */
 async function sha256(text) {
   const buf = await crypto.subtle.digest(
     "SHA-256",
@@ -31,9 +29,7 @@ async function sha256(text) {
     .join("");
 }
 
-/* =====================
-   データ取得
-===================== */
+/* データ収集 */
 function collect() {
   return {
     wakeUp: q1.value,
@@ -57,9 +53,7 @@ function collect() {
   };
 }
 
-/* =====================
-   Q7制御（完成版）
-===================== */
+/* Q7制御 */
 function setupQ7() {
 
   const radios = document.querySelectorAll('input[name="q7"]');
@@ -71,39 +65,22 @@ function setupQ7() {
 
     if (selected === "yes") {
       detail.disabled = false;
-      detail.style.opacity = "1";
     }
 
     if (selected === "no") {
       detail.value = "";
       detail.disabled = true;
-      detail.style.opacity = "0.4";
     }
   }
 
-  radios.forEach(r => {
-    r.addEventListener("change", update);
-  });
-
-  update(); // 初期化
+  radios.forEach(r => r.addEventListener("change", update));
+  update();
 }
 
-/* =====================
-   UI
-===================== */
+/* UI */
 function setupEvents() {
 
   setupQ7();
-
-  nextBtn.onclick = () => {
-    page1.classList.add("hidden");
-    page2.classList.remove("hidden");
-  };
-
-  backBtn.onclick = () => {
-    page2.classList.add("hidden");
-    page1.classList.remove("hidden");
-  };
 
   submitBtn.onclick = () => {
     showModal();
@@ -120,9 +97,7 @@ function setupEvents() {
   };
 }
 
-/* =====================
-   共有文
-===================== */
+/* 共有文 */
 function buildText(name, d) {
 
   return `
@@ -153,9 +128,7 @@ Q15 ${d.datePlace}
 `.trim();
 }
 
-/* =====================
-   モーダル
-===================== */
+/* モーダル */
 function showModal() {
   shareModal.style.display = "flex";
 }
