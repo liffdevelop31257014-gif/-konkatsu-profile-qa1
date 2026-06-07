@@ -220,7 +220,7 @@ input[type="range"]{
 
 .detail-textarea{
   width:100%;
-  min-height:40px;
+  min-height:30px;
   padding:14px;
   border:1px solid #f0c5cc;
   border-radius:16px;
