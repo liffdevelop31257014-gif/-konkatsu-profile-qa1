@@ -48,7 +48,9 @@ function collect() {
     partTimeJob: q11.value,
     holidayWithFriends: q12.value,
     holidayAlone: q13.value,
-    lineFrequency: q14.value,
+
+    lineFrequency: document.querySelector('input[name="q14"]:checked')?.value || "",
+
     datePlace: q15.value
   };
 }
