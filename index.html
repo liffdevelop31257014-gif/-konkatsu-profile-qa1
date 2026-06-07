@@ -14,9 +14,7 @@
 <div class="container">
 
   <div class="consent-box">
-    <p>
-      回答は保存されます。LINE情報はハッシュ化されます。
-    </p>
+    <p>回答は保存されます（LINE情報はハッシュ化）</p>
 
     <label>
       <input type="checkbox" id="consent">
@@ -40,10 +38,10 @@
     <textarea id="q4"></textarea>
 
     <label>Q5 子ども時代の番組</label>
-    <input id="q5" type="text">
+    <input type="text" id="q5">
 
     <label>Q6 あだ名</label>
-    <input id="q6" type="text">
+    <input type="text" id="q6">
 
     <label>Q7 MBTI</label>
     <label><input type="radio" name="q7" value="yes">あり</label>
@@ -52,6 +50,10 @@
     <input id="q7Detail" placeholder="MBTIタイプ" style="display:none">
 
     <button id="nextBtn">次へ</button>
+
+    <!-- ★追加：Page1下書き保存 -->
+    <button id="saveDraftBtn1">下書き保存</button>
+
   </div>
 
   <!-- Page2 -->
@@ -96,12 +98,11 @@
   </div>
 </div>
 
-<!-- モーダル（初期は完全非表示） -->
+<!-- モーダル -->
 <div id="shareModal" class="modal">
   <div class="modal-content">
 
     <h3>共有</h3>
-
     <input id="shareName" placeholder="共有名（任意）">
 
     <button id="shareBtn">共有</button>
