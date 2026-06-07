@@ -1,140 +1,193 @@
-const GAS_URL = "https://script.google.com/macros/s/AKfycbwgALarJs2lA9JMAK-fN4wjl-g4_6dOPfSIdK4SEzKqAiAIogT9kgR9PJ-sW1Ied2pR/exec";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbyFK5ER57hFtc7Zk1sndvkktbv-RsOrd0fw8Qf1IcJMcOacxnkPYga6eBrdzzqMZ0eK/exec";
+const LIFF_ID = "2010312230-lVV2FfLh";
 
-let liffReady = false;
-let submitSuccessData = null;
+let userHash = "";
 
-document.addEventListener("DOMContentLoaded", async () => {
+/********************************
+ * 初期化
+ ********************************/
+window.onload = async () => {
+  await liff.init({ liffId: LIFF_ID });
 
-  await liff.init({ liffId: "2010312230-lVV2FfLh" });
-  liffReady = true;
+  if (!liff.isLoggedIn()) {
+    liff.login();
+    return;
+  }
 
-  document.getElementById("startBtn").onclick = () => {
-    document.getElementById("consent").classList.add("hidden");
-    document.getElementById("form").classList.remove("hidden");
+  const profile = await liff.getProfile();
+  userHash = await sha256(profile.userId);
+
+  await loadFromServer();
+  restoreLocal();
+  setupEvents();
+};
+
+/********************************
+ * SHA256
+ ********************************/
+async function sha256(text) {
+  const data = new TextEncoder().encode(text);
+  const hash = await crypto.subtle.digest("SHA-256", data);
+
+  return [...new Uint8Array(hash)]
+    .map(b => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+/********************************
+ * GAS
+ ********************************/
+async function postToGAS(payload) {
+  return fetch(GAS_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  }).then(r => r.json());
+}
+
+/********************************
+ * 取得
+ ********************************/
+async function loadFromServer() {
+  const url = `${GAS_URL}?action=getProfile&userHash=${userHash}`;
+  const res = await fetch(url).then(r => r.json());
+
+  if (!res.found) return;
+
+  const d = res.data;
+
+  Object.keys(d).forEach(k => {
+    const el = document.getElementById(k);
+    if (el) el.value = d[k] || "";
+  });
+}
+
+/********************************
+ * localStorage
+ ********************************/
+function saveLocal() {
+  localStorage.setItem("formData", JSON.stringify(collectData()));
+}
+
+function restoreLocal() {
+  const raw = localStorage.getItem("formData");
+  if (!raw) return;
+
+  const d = JSON.parse(raw);
+  Object.keys(d).forEach(k => {
+    const el = document.getElementById(k);
+    if (el) el.value = d[k];
+  });
+}
+
+/********************************
+ * データ収集
+ ********************************/
+function collectData() {
+  return {
+    wakeUp: q1.value,
+    sleep: q2.value,
+    afterWork: q3.value,
+    morningNews: q4.value,
+    childhoodTv: q5.value,
+    nickname: q6.value,
+    mbtiStatus: document.querySelector('input[name="q7"]:checked')?.value || "",
+    mbtiType: q7Detail.value,
+    positive: q8.value,
+    empathy: q9.value,
+    club: q10.value,
+    partTimeJob: q11.value,
+    holidayWithFriends: q12.value,
+    holidayAlone: q13.value,
+    lineFrequency: q14.value,
+    datePlace: q15.value
   };
+}
 
-  // Q7分岐
-  document.getElementById("q7").addEventListener("change", (e) => {
-    const detail = document.getElementById("q7Detail");
-    if (e.target.value === "yes") {
-      detail.classList.remove("hidden");
-    } else {
-      detail.classList.add("hidden");
-      detail.value = "";
-    }
+/********************************
+ * イベント
+ ********************************/
+function setupEvents() {
+
+  document.querySelectorAll("input, textarea, select").forEach(el => {
+    el.addEventListener("input", saveLocal);
+    el.addEventListener("change", saveLocal);
   });
 
-  document.getElementById("nextBtn").onclick = () => {
-    document.getElementById("page1").classList.add("hidden");
-    document.getElementById("page2").classList.remove("hidden");
-  };
+  submitBtn.onclick = async () => {
 
-  document.getElementById("backBtn").onclick = () => {
-    document.getElementById("page2").classList.add("hidden");
-    document.getElementById("page1").classList.remove("hidden");
-  };
+    const payload = {
+      action: "submit",
+      userHash,
+      data: collectData(),
+      consent: consent.checked
+    };
 
-  // 送信
-  document.getElementById("submitBtn").onclick = async () => {
+    const res = await postToGAS(payload);
 
-    const formData = getFormData();
-
-    const res = await fetch(GAS_URL, {
-      method: "POST",
-      body: JSON.stringify(formData)
-    });
-
-    const result = await res.json();
-
-    if (result.success) {
-
-      submitSuccessData = formData;
-
-      // ★ここでは絶対にshareしない（重要）
-      document.getElementById("shareModal").classList.remove("hidden");
-
-    } else {
-      alert("保存失敗");
+    if (res.success) {
+      showShareModal();
     }
   };
 
-  // 共有ボタン（ここで初めて実行）
-  document.getElementById("shareBtn").onclick = async () => {
+  saveDraftBtn.onclick = async () => {
+    await postToGAS({
+      action: "saveDraft",
+      userHash,
+      data: collectData(),
+      consent: consent.checked
+    });
 
-    if (!submitSuccessData) return;
-
-    const shareText = buildShareText(submitSuccessData);
-
-    // LINE Share Target Picker（ここだけで発火）
-    await liff.shareTargetPicker([
-      {
-        type: "text",
-        text: shareText
-      }
-    ]);
-
-    document.getElementById("shareModal").classList.add("hidden");
+    alert("保存しました");
   };
 
-  // 閉じる（共有モーダルだけ閉じる）
-  document.getElementById("closeShareBtn").onclick = () => {
-    document.getElementById("shareModal").classList.add("hidden");
-  };
+  shareBtn.onclick = () => {
 
-  // クリア
-  document.getElementById("clearBtn").onclick = () => {
-    localStorage.clear();
-    location.reload();
-  };
+    const name = shareName.value || "匿名";
+    const text = buildShareText(name, collectData());
 
-});
+    liff.shareTargetPicker([{ type: "text", text }]);
 
-function getFormData() {
-  return {
-    userHash: "tmp", // 実際はSHA-256実装推奨
-    isDraft: false,
-
-    q1: q("q1"),
-    q2: q("q2"),
-    q3: q("q3"),
-    q4: q("q4"),
-    q5: q("q5"),
-    q6: q("q6"),
-    q7: q("q7"),
-    q7Detail: q("q7Detail"),
-    q8: q("q8"),
-    q9: q("q9"),
-    q10: q("q10"),
-    q11: q("q11"),
-    q12: q("q12"),
-    q13: q("q13"),
-    q14: q("q14"),
-    q15: q("q15")
+    hideShareModal();
   };
 }
 
-function q(id) {
-  return document.getElementById(id).value;
+/********************************
+ * モーダル制御（重要修正）
+ ********************************/
+function showShareModal() {
+  const modal = document.getElementById("shareModal");
+  modal.classList.remove("hidden");
+  modal.classList.add("show");
 }
 
-function buildShareText(data) {
-  return `
-【婚活自己開示QA】
+function hideShareModal() {
+  const modal = document.getElementById("shareModal");
+  modal.classList.add("hidden");
+  modal.classList.remove("show");
+}
 
-Q1 ${data.q1}
-Q2 ${data.q2}
-Q3 ${data.q3}
-Q4 ${data.q4}
-Q5 ${data.q5}
-Q6 ${data.q6}
-Q7 ${data.q7} ${data.q7Detail}
-Q8 ${data.q8}
-Q9 ${data.q9}
-Q10 ${data.q10}
-Q11 ${data.q11}
-Q12 ${data.q12}
-Q13 ${data.q13}
-Q14 ${data.q14}
-Q15 ${data.q15}
-`.trim();
+/********************************
+ * 共有文
+ ********************************/
+function buildShareText(name, d) {
+  return `【婚活プロフィール】
+共有者: ${name}
+
+Q1 ${d.wakeUp}
+Q2 ${d.sleep}
+Q3 ${d.afterWork}
+Q4 ${d.morningNews}
+Q5 ${d.childhoodTv}
+Q6 ${d.nickname}
+
+Q7 ${d.mbtiStatus} ${d.mbtiType}
+Q8 ${d.positive}
+Q9 ${d.empathy}
+Q10 ${d.club}
+Q11 ${d.partTimeJob}
+Q12 ${d.holidayWithFriends}
+Q13 ${d.holidayAlone}
+Q14 ${d.lineFrequency}
+Q15 ${d.datePlace}`;
 }
