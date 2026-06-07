@@ -16,6 +16,8 @@ let userHash = "";
   ********************************/
   window.onload = async () => {
 
+console.log("window.onload");
+
 try {
 
 ```
@@ -23,7 +25,12 @@ await liff.init({
   liffId: LIFF_ID
 });
 
+console.log("LIFF init OK");
+
 if (!liff.isLoggedIn()) {
+
+  console.log("login required");
+
   liff.login();
   return;
 }
@@ -31,10 +38,16 @@ if (!liff.isLoggedIn()) {
 const profile =
   await liff.getProfile();
 
+console.log("profile取得");
+
 userHash =
   await sha256(
     profile.userId
   );
+
+console.log(
+  "userHash生成完了"
+);
 
 setupEvents();
 ```
@@ -85,42 +98,53 @@ b
 
 /********************************
 
-* イベント設定
+* イベント
   ********************************/
   function setupEvents() {
+
+console.log(
+"setupEvents実行"
+);
 
 setupQ4();
 setupQ7();
 
-document
-.getElementById(
-"submitBtn"
-)
-.addEventListener(
-"click",
-submitForm
-);
-
-const shareBtn =
+const submitBtn =
 document.getElementById(
-"shareBtn"
+"submitBtn"
 );
 
-if (shareBtn) {
+if (!submitBtn) {
 
 ```
-shareBtn.addEventListener(
-  "click",
-  shareResult
+console.error(
+  "submitBtnが見つかりません"
 );
+
+return;
 ```
 
 }
+
+submitBtn.addEventListener(
+"click",
+() => {
+
+```
+  console.log(
+    "送信ボタン押下"
+  );
+
+  submitForm();
+}
+```
+
+);
 }
 
 /********************************
 
-* Q4制御
+* Q4
   ********************************/
   function setupQ4() {
 
@@ -128,6 +152,8 @@ const detail =
 document.getElementById(
 "q4Detail"
 );
+
+if (!detail) return;
 
 detail.style.display =
 "none";
@@ -144,7 +170,6 @@ document
     () => {
 
       if (
-        radio.checked &&
         radio.value === "yes"
       ) {
 
@@ -167,7 +192,7 @@ document
 
 /********************************
 
-* Q7制御
+* Q7
   ********************************/
   function setupQ7() {
 
@@ -175,6 +200,8 @@ const detail =
 document.getElementById(
 "q7Detail"
 );
+
+if (!detail) return;
 
 detail.style.display =
 "none";
@@ -191,7 +218,6 @@ document
     () => {
 
       if (
-        radio.checked &&
         radio.value === "yes"
       ) {
 
@@ -214,7 +240,7 @@ document
 
 /********************************
 
-* 入力値取得
+* 入力取得
   ********************************/
   function collectData() {
 
@@ -222,13 +248,13 @@ return {
 
 ```
 wakeUp:
-  document.getElementById("q1").value,
+  document.getElementById("q1")?.value || "",
 
 sleep:
-  document.getElementById("q2").value,
+  document.getElementById("q2")?.value || "",
 
 afterWork:
-  document.getElementById("q3").value,
+  document.getElementById("q3")?.value || "",
 
 morningNews:
   document.querySelector(
@@ -236,15 +262,13 @@ morningNews:
   )?.value || "",
 
 morningNewsDetail:
-  document.getElementById(
-    "q4Detail"
-  ).value,
+  document.getElementById("q4Detail")?.value || "",
 
 childhoodTv:
-  document.getElementById("q5").value,
+  document.getElementById("q5")?.value || "",
 
 nickname:
-  document.getElementById("q6").value,
+  document.getElementById("q6")?.value || "",
 
 mbtiStatus:
   document.querySelector(
@@ -252,29 +276,25 @@ mbtiStatus:
   )?.value || "",
 
 mbtiType:
-  document.getElementById(
-    "q7Detail"
-  ).value,
+  document.getElementById("q7Detail")?.value || "",
 
 positive:
-  document.getElementById("q8")
-    .value || "3",
+  document.getElementById("q8")?.value || "3",
 
 empathy:
-  document.getElementById("q9")
-    .value || "3",
+  document.getElementById("q9")?.value || "3",
 
 club:
-  document.getElementById("q10").value,
+  document.getElementById("q10")?.value || "",
 
 partTimeJob:
-  document.getElementById("q11").value,
+  document.getElementById("q11")?.value || "",
 
 holidayWithFriends:
-  document.getElementById("q12").value,
+  document.getElementById("q12")?.value || "",
 
 holidayAlone:
-  document.getElementById("q13").value,
+  document.getElementById("q13")?.value || "",
 
 lineFrequency:
   document.querySelector(
@@ -282,7 +302,7 @@ lineFrequency:
   )?.value || "",
 
 datePlace:
-  document.getElementById("q15").value
+  document.getElementById("q15")?.value || ""
 ```
 
 };
@@ -293,6 +313,10 @@ datePlace:
 * 送信
   ********************************/
   async function submitForm() {
+
+console.log(
+"submitForm開始"
+);
 
 const submitBtn =
 document.getElementById(
@@ -317,6 +341,8 @@ const payload = {
   data: collectData()
 };
 
+console.log(payload);
+
 const response =
   await fetch(
     GAS_URL,
@@ -324,7 +350,7 @@ const response =
       method: "POST",
       headers: {
         "Content-Type":
-          "application/json"
+        "application/json"
       },
       body: JSON.stringify(
         payload
@@ -332,42 +358,33 @@ const response =
     }
   );
 
-if (!response.ok) {
-
-  throw new Error(
-    "network"
-  );
-}
+console.log(
+  "response",
+  response
+);
 
 const result =
   await response.json();
+
+console.log(
+  "result",
+  result
+);
 
 if (
   !result.success
 ) {
 
   alert(
-    "回答の保存に失敗しました。\n時間をおいて再度お試しください。"
+    "回答の保存に失敗しました。"
   );
 
   return;
 }
 
 alert(
-  "回答ありがとうございました。\n内容を保存しました。"
+  "回答ありがとうございました。"
 );
-
-const modal =
-  document.getElementById(
-    "shareModal"
-  );
-
-if (modal) {
-
-  modal.classList.add(
-    "show"
-  );
-}
 ```
 
 } catch (error) {
@@ -376,7 +393,8 @@ if (modal) {
 console.error(error);
 
 alert(
-  "通信エラーが発生しました。\n電波状況をご確認のうえ、もう一度お試しください。"
+  "通信エラーが発生しました。\n" +
+  error.message
 );
 ```
 
@@ -391,135 +409,4 @@ submitBtn.textContent =
 ```
 
 }
-}
-
-/********************************
-
-* 共有
-  ********************************/
-  async function shareResult() {
-
-const shareName =
-document
-.getElementById(
-"shareName"
-)
-.value
-.trim() ||
-"匿名";
-
-const data =
-collectData();
-
-const text =
-buildShareText(
-shareName,
-data
-);
-
-try {
-
-```
-await liff.shareTargetPicker([
-  {
-    type: "text",
-    text: text
-  }
-]);
-```
-
-} catch (error) {
-
-```
-console.error(error);
-
-alert(
-  "共有に失敗しました。"
-);
-```
-
-}
-}
-
-/********************************
-
-* 共有文生成
-  ********************************/
-  function buildShareText(
-  shareName,
-  data
-  ) {
-
-const positiveBar =
-"◉".repeat(
-Number(data.positive)
-) +
-"〇".repeat(
-5 -
-Number(data.positive)
-);
-
-const empathyBar =
-"◉".repeat(
-Number(data.empathy)
-) +
-"〇".repeat(
-5 -
-Number(data.empathy)
-);
-
-return `
-【婚活 自己開示QA Part1】
-
-共有名：${shareName}
-
-Q1 朝起きる時間
-${data.wakeUp}
-
-Q2 夜寝る時間
-${data.sleep}
-
-Q3 仕事終わりの過ごし方
-${data.afterWork}
-
-Q4 朝のニュース・番組
-${data.morningNews === "yes"
-? data.morningNewsDetail
-: "なし"}
-
-Q5 子どもの頃好きだったテレビ番組
-${data.childhoodTv}
-
-Q6 あだ名
-${data.nickname}
-
-Q7 MBTI
-${data.mbtiStatus === "yes"
-? data.mbtiType
-: "なし"}
-
-Q8 ポジティブ度
-ネガティブ ${positiveBar} ポジティブ
-
-Q9 察する度
-察さない ${empathyBar} 察する
-
-Q10 部活動
-${data.club}
-
-Q11 バイト経験
-${data.partTimeJob}
-
-Q12 休日（人と）
-${data.holidayWithFriends}
-
-Q13 休日（一人）
-${data.holidayAlone}
-
-Q14 LINE頻度
-${data.lineFrequency}
-
-Q15 行きたいデート先
-${data.datePlace}
-`;
 }
