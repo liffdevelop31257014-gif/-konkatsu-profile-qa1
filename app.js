@@ -2,6 +2,7 @@ const LIFF_ID = "2010312230-lVV2FfLh";
 
 let userHash = "";
 
+/* 初期化 */
 window.addEventListener("DOMContentLoaded", async () => {
 
   await liff.init({ liffId: LIFF_ID });
@@ -14,7 +15,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   const profile = await liff.getProfile();
   userHash = await sha256(profile.userId);
 
-  setupEvents();
+  setupUI();
 });
 
 /* SHA256 */
@@ -29,47 +30,91 @@ async function sha256(text) {
     .join("");
 }
 
+/* DOM取得ヘルパー */
+const $ = (id) => document.getElementById(id);
+
 /* データ収集 */
-function collect() {
+function collectData() {
+
   return {
-    wakeUp: q1.value,
-    sleep: q2.value,
-    afterWork: q3.value,
-    morningNews: q4.value,
-    childhoodTv: q5.value,
-    nickname: q6.value,
+    q1: $("q1").value,
+    q2: $("q2").value,
+    q3: $("q3").value,
 
-    mbtiStatus: document.querySelector('input[name="q7"]:checked')?.value || "",
-    mbtiType: q7Detail.value,
+    q4: document.querySelector('input[name="q4"]:checked')?.value || "",
+    q4Detail: $("q4Detail").value,
 
-    positive: q8.value,
-    empathy: q9.value,
-    club: q10.value,
-    partTimeJob: q11.value,
-    holidayWithFriends: q12.value,
-    holidayAlone: q13.value,
+    q5: $("q5").value,
+    q6: $("q6").value,
 
-    lineFrequency: document.querySelector('input[name="q14"]:checked')?.value || "",
+    q7: document.querySelector('input[name="q7"]:checked')?.value || "",
+    q7Detail: $("q7Detail").value,
 
-    datePlace: q15.value
+    q8: $("q8").value,
+    q9: $("q9").value,
+
+    q10: $("q10").value,
+    q11: $("q11").value,
+    q12: $("q12").value,
+    q13: $("q13").value,
+
+    q14: document.querySelector('input[name="q14"]:checked')?.value || "",
+    q15: $("q15").value
   };
 }
 
-/* Q7制御 */
-function setupQ7() {
+/* UI設定 */
+function setupUI() {
 
-  const radios = document.querySelectorAll('input[name="q7"]');
-  const detail = document.getElementById("q7Detail");
+  /* Q4制御 */
+  setupRadioDetail("q4", "q4Detail");
 
-  function update() {
+  /* Q7制御 */
+  setupRadioDetail("q7", "q7Detail");
 
-    const selected = document.querySelector('input[name="q7"]:checked')?.value;
+  /* 送信 */
+  $("submitBtn").onclick = () => {
 
-    if (selected === "yes") {
-      detail.disabled = false;
+    if (!liff.isInClient()) {
+      alert("LINEアプリ内で開いてください");
+      return;
     }
 
-    if (selected === "no") {
+    const text = buildText(collectData());
+
+    liff.shareTargetPicker([
+      { type: "text", text }
+    ]);
+  };
+
+  /* モーダル */
+  $("shareBtn").onclick = () => {
+
+    const name = $("shareName").value || "匿名";
+    const text = buildText(collectData(), name);
+
+    liff.shareTargetPicker([
+      { type: "text", text }
+    ]);
+
+    hideModal();
+  };
+}
+
+/* ラジオ＋詳細入力制御 */
+function setupRadioDetail(name, detailId) {
+
+  const radios = document.querySelectorAll(`input[name="${name}"]`);
+  const detail = $(detailId);
+
+  function update() {
+    const val = document.querySelector(`input[name="${name}"]:checked`)?.value;
+
+    if (val === "yes") {
+      detail.style.display = "block";
+      detail.disabled = false;
+    } else {
+      detail.style.display = "none";
       detail.value = "";
       detail.disabled = true;
     }
@@ -79,62 +124,46 @@ function setupQ7() {
   update();
 }
 
-/* UI */
-function setupEvents() {
-
-  setupQ7();
-
-  submitBtn.onclick = () => {
-    showModal();
-  };
-
-  shareBtn.onclick = () => {
-
-    const name = shareName.value || "匿名";
-    const text = buildText(name, collect());
-
-    liff.shareTargetPicker([{ type: "text", text }]);
-
-    hideModal();
-  };
-}
-
-/* 共有文 */
-function buildText(name, d) {
+/* 共有文生成 */
+function buildText(d, name = "匿名") {
 
   return `
 【婚活プロフィール】
 
 共有者：${name}
 
-Q1 ${d.wakeUp}
-Q2 ${d.sleep}
-Q3 ${d.afterWork}
-Q4 ${d.morningNews}
-Q5 ${d.childhoodTv}
-Q6 ${d.nickname}
+Q1 ${d.q1}
+Q2 ${d.q2}
+Q3 ${d.q3}
 
-Q7 MBTI：${d.mbtiStatus} ${d.mbtiType}
+Q4 ${d.q4} ${d.q4Detail}
 
-Q8 ${d.positive}
-Q9 ${d.empathy}
+Q5 ${d.q5}
+Q6 ${d.q6}
 
-Q10 ${d.club}
-Q11 ${d.partTimeJob}
+Q7 ${d.q7} ${d.q7Detail}
 
-Q12 ${d.holidayWithFriends}
-Q13 ${d.holidayAlone}
+Q8 ${d.q8}
+Q9 ${d.q9}
 
-Q14 ${d.lineFrequency}
-Q15 ${d.datePlace}
+Q10 ${d.q10}
+Q11 ${d.q11}
+
+Q12 ${d.q12}
+Q13 ${d.q13}
+
+Q14 ${d.q14}
+Q15 ${d.q15}
 `.trim();
 }
 
-/* モーダル */
+/* モーダル制御（未使用でも壊れないように残置） */
 function showModal() {
-  shareModal.style.display = "flex";
+  const el = $("shareModal");
+  if (el) el.style.display = "flex";
 }
 
 function hideModal() {
-  shareModal.style.display = "none";
+  const el = $("shareModal");
+  if (el) el.style.display = "none";
 }
