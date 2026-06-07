@@ -184,3 +184,21 @@ padding: 20px;
 font-size: 24px;
 }
 }
+
+/* Q4・Q7自由記述欄 */
+
+#q4Detail,
+#q7Detail {
+  width: 100%;
+  min-height: 52px;
+  padding: 12px;
+  margin-top: 8px;
+  margin-bottom: 12px;
+
+  font-size: 16px;
+
+  border: 2px solid #f5b7c4;
+  border-radius: 12px;
+
+  box-sizing: border-box;
+}
