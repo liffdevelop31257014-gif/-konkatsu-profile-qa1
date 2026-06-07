@@ -3,9 +3,6 @@ const LIFF_ID = "2010312230-lVV2FfLh";
 
 let userHash = "";
 
-/********************************
- * 初期化
- ********************************/
 window.onload = async () => {
   await liff.init({ liffId: LIFF_ID });
 
@@ -17,73 +14,29 @@ window.onload = async () => {
   const profile = await liff.getProfile();
   userHash = await sha256(profile.userId);
 
-  await loadFromServer();
-  restoreLocal();
-  setupEvents();
+  setup();
 };
 
-/********************************
- * SHA256
- ********************************/
 async function sha256(text) {
-  const data = new TextEncoder().encode(text);
-  const hash = await crypto.subtle.digest("SHA-256", data);
+  const buf = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder().encode(text)
+  );
 
-  return [...new Uint8Array(hash)]
+  return [...new Uint8Array(buf)]
     .map(b => b.toString(16).padStart(2, "0"))
     .join("");
 }
 
-/********************************
- * GAS
- ********************************/
-async function postToGAS(payload) {
+async function post(payload) {
   return fetch(GAS_URL, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
+    body: JSON.stringify(payload),
+    headers: { "Content-Type": "application/json" }
   }).then(r => r.json());
 }
 
-/********************************
- * 取得
- ********************************/
-async function loadFromServer() {
-  const url = `${GAS_URL}?action=getProfile&userHash=${userHash}`;
-  const res = await fetch(url).then(r => r.json());
-
-  if (!res.found) return;
-
-  const d = res.data;
-
-  Object.keys(d).forEach(k => {
-    const el = document.getElementById(k);
-    if (el) el.value = d[k] || "";
-  });
-}
-
-/********************************
- * localStorage
- ********************************/
-function saveLocal() {
-  localStorage.setItem("formData", JSON.stringify(collectData()));
-}
-
-function restoreLocal() {
-  const raw = localStorage.getItem("formData");
-  if (!raw) return;
-
-  const d = JSON.parse(raw);
-  Object.keys(d).forEach(k => {
-    const el = document.getElementById(k);
-    if (el) el.value = d[k];
-  });
-}
-
-/********************************
- * データ収集
- ********************************/
-function collectData() {
+function collect() {
   return {
     wakeUp: q1.value,
     sleep: q2.value,
@@ -104,90 +57,48 @@ function collectData() {
   };
 }
 
-/********************************
- * イベント
- ********************************/
-function setupEvents() {
-
-  document.querySelectorAll("input, textarea, select").forEach(el => {
-    el.addEventListener("input", saveLocal);
-    el.addEventListener("change", saveLocal);
-  });
+function setup() {
 
   submitBtn.onclick = async () => {
 
-    const payload = {
+    const res = await post({
       action: "submit",
       userHash,
-      data: collectData(),
+      data: collect(),
       consent: consent.checked
-    };
-
-    const res = await postToGAS(payload);
+    });
 
     if (res.success) {
-      showShareModal();
+      showModal();
     }
   };
 
   saveDraftBtn.onclick = async () => {
-    await postToGAS({
+    await post({
       action: "saveDraft",
       userHash,
-      data: collectData(),
+      data: collect(),
       consent: consent.checked
     });
 
-    alert("保存しました");
+    alert("保存");
   };
 
   shareBtn.onclick = () => {
-
-    const name = shareName.value || "匿名";
-    const text = buildShareText(name, collectData());
-
+    const text = JSON.stringify(collect());
     liff.shareTargetPicker([{ type: "text", text }]);
-
-    hideShareModal();
+    hideModal();
   };
+
+  nextBtn.onclick = () => page2.classList.remove("hidden");
+  backBtn.onclick = () => page2.classList.add("hidden");
 }
 
-/********************************
- * モーダル制御（重要修正）
- ********************************/
-function showShareModal() {
-  const modal = document.getElementById("shareModal");
-  modal.classList.remove("hidden");
-  modal.classList.add("show");
+/* ★重要：ここが完全修正ポイント */
+function showModal() {
+  document.getElementById("shareModal").style.display = "flex";
 }
 
-function hideShareModal() {
-  const modal = document.getElementById("shareModal");
-  modal.classList.add("hidden");
-  modal.classList.remove("show");
-}
-
-/********************************
- * 共有文
- ********************************/
-function buildShareText(name, d) {
-  return `【婚活プロフィール】
-共有者: ${name}
-
-Q1 ${d.wakeUp}
-Q2 ${d.sleep}
-Q3 ${d.afterWork}
-Q4 ${d.morningNews}
-Q5 ${d.childhoodTv}
-Q6 ${d.nickname}
-
-Q7 ${d.mbtiStatus} ${d.mbtiType}
-Q8 ${d.positive}
-Q9 ${d.empathy}
-Q10 ${d.club}
-Q11 ${d.partTimeJob}
-Q12 ${d.holidayWithFriends}
-Q13 ${d.holidayAlone}
-Q14 ${d.lineFrequency}
-Q15 ${d.datePlace}`;
+function hideModal() {
+  document.getElementById("shareModal").style.display = "none";
 }
