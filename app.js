@@ -58,11 +58,43 @@ function collect() {
 }
 
 /* =====================
+   Q7制御（完成版）
+===================== */
+function setupQ7() {
+
+  const radios = document.querySelectorAll('input[name="q7"]');
+  const detail = document.getElementById("q7Detail");
+
+  function update() {
+
+    const selected = document.querySelector('input[name="q7"]:checked')?.value;
+
+    if (selected === "yes") {
+      detail.disabled = false;
+      detail.style.opacity = "1";
+    }
+
+    if (selected === "no") {
+      detail.value = "";
+      detail.disabled = true;
+      detail.style.opacity = "0.4";
+    }
+  }
+
+  radios.forEach(r => {
+    r.addEventListener("change", update);
+  });
+
+  update(); // 初期化
+}
+
+/* =====================
    UI
 ===================== */
 function setupEvents() {
 
-  // ページ切替
+  setupQ7();
+
   nextBtn.onclick = () => {
     page1.classList.add("hidden");
     page2.classList.remove("hidden");
@@ -73,32 +105,10 @@ function setupEvents() {
     page1.classList.remove("hidden");
   };
 
-  // ★Q7制御（完全安定版）
-  document.querySelectorAll('input[name="q7"]').forEach(radio => {
-    radio.addEventListener("change", () => {
-
-      const detail = document.getElementById("q7Detail");
-
-      if (radio.value === "yes" && radio.checked) {
-        detail.style.display = "block";
-      }
-
-      if (radio.value === "no" && radio.checked) {
-        detail.style.display = "none";
-        detail.value = "";
-      }
-    });
-  });
-
-  // 送信
-  submitBtn.onclick = async () => {
-
-    const res = await fetch("/dummy"); //（GAS接続済みならここ差し替え）
-
+  submitBtn.onclick = () => {
     showModal();
   };
 
-  // 共有
   shareBtn.onclick = () => {
 
     const name = shareName.value || "匿名";
