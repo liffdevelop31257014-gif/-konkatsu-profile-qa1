@@ -15,9 +15,12 @@ window.addEventListener("DOMContentLoaded", async () => {
   const profile = await liff.getProfile();
   userHash = await sha256(profile.userId);
 
-  setup();
+  setupEvents();
 });
 
+/* =====================
+   ハッシュ化
+===================== */
 async function sha256(text) {
   const buf = await crypto.subtle.digest(
     "SHA-256",
@@ -29,6 +32,9 @@ async function sha256(text) {
     .join("");
 }
 
+/* =====================
+   GAS通信
+===================== */
 async function post(payload) {
   return fetch(GAS_URL, {
     method: "POST",
@@ -37,6 +43,9 @@ async function post(payload) {
   }).then(r => r.json());
 }
 
+/* =====================
+   データ収集
+===================== */
 function collect() {
   return {
     wakeUp: q1.value,
@@ -45,8 +54,10 @@ function collect() {
     morningNews: q4.value,
     childhoodTv: q5.value,
     nickname: q6.value,
+
     mbtiStatus: document.querySelector('input[name="q7"]:checked')?.value || "",
     mbtiType: q7Detail.value,
+
     positive: q8.value,
     empathy: q9.value,
     club: q10.value,
@@ -58,85 +69,110 @@ function collect() {
   };
 }
 
-function setup() {
+/* =====================
+   UI制御
+===================== */
+function setupEvents() {
 
-  nextBtn.onclick = () => page2.classList.remove("hidden");
-  backBtn.onclick = () => page2.classList.add("hidden");
+  // ページ遷移
+  nextBtn.onclick = () => {
+    page1.classList.add("hidden");
+    page2.classList.remove("hidden");
+  };
 
+  backBtn.onclick = () => {
+    page2.classList.add("hidden");
+    page1.classList.remove("hidden");
+  };
+
+  // MBTI表示制御
+  document.querySelectorAll('input[name="q7"]').forEach(r => {
+    r.addEventListener("change", () => {
+      if (r.value === "yes") {
+        q7Detail.style.display = "block";
+      } else {
+        q7Detail.style.display = "none";
+        q7Detail.value = "";
+      }
+    });
+  });
+
+  // 送信
   submitBtn.onclick = async () => {
+
+    if (!consent.checked) {
+      alert("同意が必要です");
+      return;
+    }
 
     const res = await post({
       action: "submit",
       userHash,
       data: collect(),
-      consent: consent.checked
+      consent: true
     });
 
     if (res.success) {
       showModal();
+    } else {
+      alert("送信に失敗しました");
     }
   };
 
-  saveDraftBtn.onclick = () => saveDraft();
-  saveDraftBtn1.onclick = () => saveDraft();
-
+  // 共有
   shareBtn.onclick = () => {
-    const text = JSON.stringify(collect());
-    liff.shareTargetPicker([{ type: "text", text }]);
+
+    const name = shareName.value || "匿名";
+    const text = buildText(name, collect());
+
+    liff.shareTargetPicker([
+      { type: "text", text }
+    ]);
+
     hideModal();
   };
 }
 
-async function saveDraft() {
+/* =====================
+   共有文生成
+===================== */
+function buildText(name, d) {
 
-  if (!consent.checked) {
-    alert("同意が必要です");
-    return;
-  }
+  return `
+【婚活プロフィール】
 
-  const btns = [saveDraftBtn, saveDraftBtn1];
+共有者：${name}
 
-  btns.forEach(b => {
-    if (b) {
-      b.disabled = true;
-      b.textContent = "保存中...";
-    }
-  });
+Q1 起床：${d.wakeUp}
+Q2 就寝：${d.sleep}
+Q3 ${d.afterWork}
+Q4 ${d.morningNews}
+Q5 ${d.childhoodTv}
+Q6 ${d.nickname}
 
-  const res = await post({
-    action: "saveDraft",
-    userHash,
-    data: collect(),
-    consent: true
-  });
+Q7 MBTI：${d.mbtiStatus} ${d.mbtiType}
 
-  if (res.success) {
-    showStatus("下書き保存しました");
-  } else {
-    showStatus("保存失敗");
-  }
+Q8 ポジネガ：${d.positive}
+Q9 察する力：${d.empathy}
 
-  btns.forEach(b => {
-    if (b) {
-      b.disabled = false;
-      b.textContent = "下書き保存";
-    }
-  });
+Q10 部活：${d.club}
+Q11 バイト：${d.partTimeJob}
+
+Q12 休日（人と）：${d.holidayWithFriends}
+Q13 休日（1人）：${d.holidayAlone}
+
+Q14 LINE頻度：${d.lineFrequency}
+Q15 デート希望：${d.datePlace}
+`.trim();
 }
 
-function showStatus(msg) {
-  const el = document.getElementById("saveStatus");
-  el.textContent = msg;
-
-  setTimeout(() => {
-    el.textContent = "";
-  }, 2000);
-}
-
+/* =====================
+   モーダル
+===================== */
 function showModal() {
-  document.getElementById("shareModal").style.display = "flex";
+  shareModal.style.display = "flex";
 }
 
 function hideModal() {
-  document.getElementById("shareModal").style.display = "none";
+  shareModal.style.display = "none";
 }
