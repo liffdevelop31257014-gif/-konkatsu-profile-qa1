@@ -128,10 +128,14 @@ input[type="range"]{
  * ボタン
  ********************************/
 
+.button-group{
+  margin-top:40px;
+}
+
+/* 送信 */
 #submitBtn{
   width:100%;
-  margin-top:36px;
-  padding:16px;
+  padding:18px;
   border:none;
   border-radius:14px;
   background:#f48ca0;
@@ -139,11 +143,54 @@ input[type="range"]{
   font-size:18px;
   font-weight:700;
   cursor:pointer;
-  transition:.2s;
+  box-shadow:
+    0 4px 12px rgba(244,140,160,.35);
 }
 
 #submitBtn:hover{
-  opacity:.9;
+  opacity:.95;
+}
+
+/* 下段ボタン */
+.sub-buttons{
+  display:flex;
+  gap:12px;
+  margin-top:12px;
+}
+
+/* 共通 */
+.sub-buttons button{
+  flex:1;
+  border-radius:12px;
+  font-weight:600;
+  cursor:pointer;
+  transition:.2s;
+}
+
+/* 下書き保存 */
+#draftBtn{
+  padding:14px;
+  background:#fff;
+  color:#d96c7d;
+  border:2px solid #f0c5cc;
+  font-size:15px;
+}
+
+/* フォームクリア */
+#clearBtn{
+  padding:14px;
+  background:#fafafa;
+  color:#888;
+  border:1px solid #dddddd;
+  font-size:15px;
+}
+
+#draftBtn:hover{
+  background:#fff6f7;
+}
+
+#clearBtn:hover{
+  background:#f0f0f0;
 }
 
 /********************************
