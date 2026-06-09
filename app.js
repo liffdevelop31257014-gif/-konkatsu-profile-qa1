@@ -14,7 +14,21 @@ let userHash = "";
 
 * 初期化
   ********************************/
-  window.onload = async () => {
+  
+
+function log(msg){
+  console.log(msg);
+
+  const el =
+    document.getElementById("debug");
+
+  if(el){
+    el.textContent += msg + "\n";
+  }
+}
+
+　
+window.onload = async () => {
 
 console.log("window.onload");
 
