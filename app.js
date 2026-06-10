@@ -2,7 +2,7 @@
    婚活自己開示QA Part1 – app.js
    ============================================================ */
 
-const LIFF_ID   = "YOUR_LIFF_ID"; // ← 実際のLIFF IDに差し替えてください
+const LIFF_ID   = "2010312230-lVV2FfLh";
 const DRAFT_KEY = "konkatsu_qa_draft";
 
 /* ------------------------------------------------------------
