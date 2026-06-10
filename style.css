@@ -276,3 +276,69 @@ input[type="range"]{
   resize:none;
   margin:8px 0 12px 0;
 }
+
+/* ==========================
+   共有画面スライダー
+========================== */
+
+.share-slider{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-top:8px;
+}
+
+.slider-left,
+.slider-right{
+  color:#e56b8b;
+  font-weight:700;
+  font-size:14px;
+  white-space:nowrap;
+}
+
+.slider-track{
+  flex:1;
+  position:relative;
+  height:28px;
+}
+
+.slider-line{
+  position:absolute;
+  left:0;
+  right:0;
+  top:50%;
+  height:2px;
+  background:#e56b8b;
+  transform:translateY(-50%);
+}
+
+.tick{
+  position:absolute;
+  top:50%;
+  width:2px;
+  height:14px;
+  background:#e56b8b;
+  transform:translate(-50%,-50%);
+}
+
+.t1{ left:0%; }
+.t2{ left:25%; }
+.t3{ left:50%; }
+.t4{ left:75%; }
+.t5{ left:100%; }
+
+.slider-dot{
+  position:absolute;
+  top:50%;
+  width:18px;
+  height:18px;
+  background:#000;
+  border-radius:50%;
+  transform:translate(-50%,-50%);
+}
+
+.pos-1{ left:0%; }
+.pos-2{ left:25%; }
+.pos-3{ left:50%; }
+.pos-4{ left:75%; }
+.pos-5{ left:100%; }
