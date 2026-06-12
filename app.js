@@ -404,16 +404,16 @@ async function sendNextPartMessage() {
     const previewMsg = shareName
       ? `${shareName}さんの婚活　自己開示QA part1の回答が届きました。\n回答をみる→${shareURL}`
       : `婚活　自己開示QA part1の回答が届きました。\n回答をみる→${shareURL}`;
+   
+     // 本人にも共有URLを送信し、続けてPart2への案内も送信
+    await sendShareMessageToSelf(previewMsg);
+    await sendNextPartMessage();
 
+     
     // モーダルを閉じる
     const modal = document.getElementById("shareModal");
     modal.classList.remove("show");
     modal.classList.add("hidden");
-
-    // 送信＆共有完了 → 本人にも共有URLを送信し、続けてPart2への案内も送信
-    // （liff.sendMessages はページ遷移前に呼び出す必要があるため先に実行）
-    await sendShareMessageToSelf(previewMsg);
-    await sendNextPartMessage();
 
     // LINEの「送信先を選択」画面を開くURLスキーム
     const lineShareURL = `https://line.me/R/msg/text/?${encodeURIComponent(previewMsg)}`;
