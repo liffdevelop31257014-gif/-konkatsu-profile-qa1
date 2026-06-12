@@ -355,7 +355,7 @@ async function sendNextPartMessage() {
   toggleDetail("q7Detail", q7c ? q7c.value === "yes" : false);
 
   /* ----- 下書き保存 ----- */
-  document.getElementById("draftBtn").addEventListener("click", () => {
+  document.getElementById("draftBtn").addEventListener("click", async () => {
     try {
       localStorage.setItem(DRAFT_KEY, JSON.stringify(collectFormData()));
       alert("下書きを保存しました。");
@@ -365,7 +365,7 @@ async function sendNextPartMessage() {
   });
 
   /* ----- フォームクリア ----- */
-  document.getElementById("clearBtn").addEventListener("click", () => {
+  document.getElementById("clearBtn").addEventListener("click", async () => {
     if (!confirm("入力内容をすべてクリアしますか？")) return;
     ["q1","q2","q3","q4Detail","q5","q6","q7Detail","q10","q11","q12","q13","q15"]
       .forEach(id => { const el = document.getElementById(id); if (el) el.value = ""; });
@@ -378,7 +378,7 @@ async function sendNextPartMessage() {
   });
 
   /* ----- 送信ボタン ----- */
-  document.getElementById("submitBtn").addEventListener("click", () => {
+  document.getElementById("submitBtn").addEventListener("click", async () => {
     const data   = collectFormData();
     const errors = validate(data);
     if (errors.length > 0) {
@@ -388,11 +388,20 @@ async function sendNextPartMessage() {
     // 前回の回答として保存（次回編集時に復元できるようにする）
     try { localStorage.setItem(DRAFT_KEY, JSON.stringify(data)); } catch (_) {}
 
-    const modal = document.getElementById("shareModal");
-    modal.classList.remove("hidden");
-    modal.classList.add("show");
-    document.getElementById("submitBtn").disabled = true;
-  });
+   // 本人に共有URLを送信し、続けてPart2への案内も送信
+  const shareURL = encodeDataToURL(data);
+  const previewMsg = `婚活　自己開示QA part1の回答が届きました。\n回答をみる→${shareURL}`;
+
+  await sendShareMessageToSelf(previewMsg);
+  await sendNextPartMessage();
+
+  // モーダル表示
+  const modal = document.getElementById("shareModal");
+  modal.classList.remove("hidden");
+  modal.classList.add("show");
+
+  document.getElementById("submitBtn").disabled = true;
+});
 
   /* ----- 共有ボタン ----- */
   document.getElementById("shareBtn").addEventListener("click", async () => {
@@ -404,11 +413,6 @@ async function sendNextPartMessage() {
     const previewMsg = shareName
       ? `${shareName}さんの婚活　自己開示QA part1の回答が届きました。\n回答をみる→${shareURL}`
       : `婚活　自己開示QA part1の回答が届きました。\n回答をみる→${shareURL}`;
-   
-     // 本人にも共有URLを送信し、続けてPart2への案内も送信
-    await sendShareMessageToSelf(previewMsg);
-    await sendNextPartMessage();
-
      
     // モーダルを閉じる
     const modal = document.getElementById("shareModal");
