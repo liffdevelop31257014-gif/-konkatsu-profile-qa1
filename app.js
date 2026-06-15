@@ -275,10 +275,12 @@ function renderViewMode(data, options = {}) {
    </div>
    ` : ""}
 
+   ${!selfPreview ? `
    <div class="view-header">
-     <p class="view-label">回答内容</p>
-     ${data._shareName ? `<p class="view-name">${escapeHTML(data._shareName)} さんの回答</p>` : ""}
+   <p class="view-label">回答内容</p>
+    ${data._shareName ? `<p class="view-name">${escapeHTML(data._shareName)} さんの回答</p>` : ""}
    </div>
+   ` : ""}
 
    ${rows.map(({ q, a, slider }) => `
      <div class="view-item">
